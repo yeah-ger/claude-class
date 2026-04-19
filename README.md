@@ -1,31 +1,58 @@
 # Claude Class
 
-一个面向老师的班级打卡与点评工具，纯前端实现，支持本地离线记录、周/月视图、多维度统计看板，以及一键导出手机竖屏长图。
+A local-first classroom check-in and feedback tool for teachers.
 
-## 特性
+Claude Class is a pure frontend web app for tracking student check-ins, writing short feedback, viewing weekly or monthly summaries, and exporting polished mobile-friendly report images.
 
-- 纯静态项目，直接打开 `index.html` 即可使用
-- 班级、学生、回收站完整闭环
-- 周视图与月视图记录，支持自定义评价维度
-- 看板支持排名、趋势与汇总统计
-- 导出预览与 PNG 下载保持一致
-- 数据存储在浏览器 `localStorage`，默认不上传任何服务器
+Live demo: [https://yeah-ger.github.io/claude-class/](https://yeah-ger.github.io/claude-class/)
 
-## 快速开始
+## Why This Project
 
-1. 克隆或下载本仓库
-2. 用浏览器打开 `index.html`
-3. 新建班级，导入学生名单，开始记录
+Many teachers need something lighter than a full school management system:
 
-也可以直接在本地启动一个静态服务器，例如：
+- quick class setup
+- fast weekly or monthly recording
+- clear student feedback
+- useful summary dashboards
+- simple image export for sharing in group chats
+
+This project focuses on that workflow and keeps everything browser-based.
+
+## Highlights
+
+- Local-first: all data is stored in the browser `localStorage`
+- Pure static app: open `index.html` directly, no backend required
+- Weekly and monthly views for classroom records
+- Custom evaluation dimensions beyond the built-in fields
+- Dashboard with rankings, trends, and summary metrics
+- Recycle bin for deleted classes and students
+- Mobile-friendly PNG export for class reports
+- Export preview now matches the downloaded image output
+
+## Best For
+
+- teachers running small or medium-sized classes
+- after-school programs and tutoring groups
+- users who prefer lightweight offline-friendly tools
+- educators who want a simple visual export instead of spreadsheets
+
+## Quick Start
+
+### Option 1: Open directly
+
+1. Clone or download this repository
+2. Open `index.html` in your browser
+3. Create a class and start recording
+
+### Option 2: Run a local static server
 
 ```bash
 python3 -m http.server 8080
 ```
 
-然后访问 `http://localhost:8080`。
+Then visit [http://localhost:8080](http://localhost:8080).
 
-## 项目结构
+## Project Structure
 
 ```text
 .
@@ -43,24 +70,32 @@ python3 -m http.server 8080
     └── html2canvas.min.js
 ```
 
-## 数据与隐私
+## Data and Privacy
 
-- 所有业务数据默认保存在当前浏览器的 `localStorage`
-- 清理浏览器站点数据后，本地记录会一起被清除
-- 如果部署到 GitHub Pages 或其他静态托管平台，数据仍然只保存在访问者自己的浏览器里
+- No server-side storage is included
+- All records stay in the current browser unless the user clears site data
+- If deployed with GitHub Pages or any static hosting platform, data still remains local to each visitor's browser
 
-## 开发说明
+## Development
 
-- 不依赖打包工具
-- 建议修改后执行：
+- No bundler required
+- Main stack: HTML, CSS, vanilla JavaScript
+- PNG export uses the vendored `lib/html2canvas.min.js`
+- Google Fonts are referenced for the visual style; if unavailable, the app falls back to system fonts
+
+Recommended syntax check:
 
 ```bash
 for f in js/*.js; do node --check "$f" || exit 1; done
 ```
 
-- 导出能力依赖仓库内置的 `lib/html2canvas.min.js`
-- 页面默认使用 Google Fonts；在无网络环境下会回退到系统字体，不影响功能
+## Roadmap Ideas
+
+- import and export data as JSON
+- drag-and-drop student sorting
+- richer monthly feedback generation
+- clearer analytics wording for teacher workflows
 
 ## License
 
-本项目默认采用 MIT License，详见 `LICENSE`。
+MIT. See `LICENSE`.
