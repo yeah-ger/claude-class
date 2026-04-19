@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Class · 班级打卡与点评</title>
+
+  <!-- 字体：Fraunces（衬线显示）+ Inter Tight（正文）+ JetBrains Mono（数字） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- 防止主题闪烁（FOUC）：在 CSS 渲染前同步读取主题设置 -->
+  <script>
+    (function() {
+      try {
+        var s = JSON.parse(localStorage.getItem('cc_settings') || '{}');
+        var mode = s.theme || 'auto';
+        if (mode === 'auto') {
+          mode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', mode);
+      } catch(e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ============ 顶栏 ============ -->
+  <header class="topbar">
+    <a class="brand" href="#/classes" aria-label="首页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+          <path d="M12 3 4 19h3.5l1.1-2.6h6.8L16.5 19H20L12 3Zm-2.2 10.4L12 8l2.2 5.4H9.8Z" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <em>Claude</em> Class
+      </span>
+    </a>
+
+    <nav class="top-nav" id="topNav">
+      <a href="#/classes" data-route="#/classes">班级</a>
+      <a href="#/dashboard" data-route="#/dashboard">看板</a>
+      <a href="#/trash" data-route="#/trash">回收站</a>
+    </nav>
+
+    <div class="top-actions">
+      <button class="icon-btn" id="themeToggle" title="切换明暗" aria-label="切换主题">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ 主容器 ============ -->
+  <main id="view" class="view-root"></main>
+
+  <!-- ============ 全局 Toast ============ -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============ 通用 Modal ============ -->
+  <div id="modal" class="modal-root" aria-hidden="true">
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <header class="modal-head">
+        <h3 id="modalTitle">标题</h3>
+        <button class="icon-btn" data-close="1" aria-label="关闭">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </header>
+      <div class="modal-body" id="modalBody"></div>
+      <footer class="modal-foot" id="modalFoot"></footer>
+    </div>
+  </div>
+
+  <!-- ============ 模板 ============ -->
+  <template id="tpl-empty-classes">
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-kicker">Claude Class</p>
+        <h1 class="hero-title">一个<em>温柔而清晰</em>的<br/>课堂记录工具。</h1>
+        <p class="hero-sub">为老师设计的打卡与点评系统：录入、沉淀、一键导出漂亮的班级总结图。</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="heroCreate">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            新建第一个班级
+          </button>
+          <button class="btn btn-ghost" id="heroDemo">载入示例数据</button>
+        </div>
+        <ul class="hero-feats">
+          <li><span>01</span>周/月视图，评价维度可自定义</li>
+          <li><span>02</span>一键导出手机竖屏点评长图</li>
+          <li><span>03</span>多维度排名看板，数据沉淀</li>
+        </ul>
+      </div>
+    </section>
+  </template>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <span>Claude Class · 本地运行 · 数据保存在此浏览器</span>
+    <a href="#/about" class="footer-about">关于</a>
+  </footer>
+
+  <!-- ============ 脚本（顺序不能乱） ============ -->
+  <script src="lib/html2canvas.min.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/record.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
