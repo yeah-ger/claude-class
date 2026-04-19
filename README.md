@@ -2,6 +2,8 @@
 
 A local-first classroom check-in and feedback tool for teachers.
 
+![Claude Class preview](./assets/claude-class-preview.svg)
+
 Claude Class is a pure frontend web app for tracking student check-ins, writing short feedback, viewing weekly or monthly summaries, and exporting polished mobile-friendly report images.
 
 Live demo: [https://yeah-ger.github.io/claude-class/](https://yeah-ger.github.io/claude-class/)
